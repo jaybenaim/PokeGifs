@@ -62,9 +62,7 @@ def login_view(request):
             
             username = form.cleaned_data['username']
             pw = form.cleaned_data['password']
-            
             user = authenticate(username=username, password=pw)
-            
             if user is not None:
                 login(request, user)
                 return HttpResponseRedirect('/home')
