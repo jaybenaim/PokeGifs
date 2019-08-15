@@ -12,4 +12,5 @@ urlpatterns = [
     path('pokemon/<int:pk>', pokemon_api, name='pokemon_api'),
     path('pokemon/<int:pk>/show', pokemon_show, name='pokemon_show'),
     path('pokemon/search', pokemon_search, name="pokemon_search"), 
+    # path('pokemon/team', pokemon_team, name='teams'), 
 ]

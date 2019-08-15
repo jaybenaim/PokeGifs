@@ -12,3 +12,6 @@ body {
 .results h1, .results h2, .results p { 
     text-align: center; 
 }
+.results img { 
+    margin: 0 60px; 
+}
