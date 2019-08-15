@@ -1,0 +1,20 @@
+{% extends 'base.html'%}
+{% block title %}
+{% endblock %}
+{% block content %}
+<!-- SEaRCH FOR A POKEMON -->
+<form class="form" action="{% url 'pokemon_search' %}" method="get"> 
+    <label for="picture-search"> 
+        <span>Search: </span> 
+    </label>
+        <input type='search' id="picture-search" name="query" value="{{ query }}" />
+    <input type="submit" value="Search" />
+</form> 
+<div class='results'> 
+    <p> Leave me blank for a random pokemon.</p> 
+    <p> If no pokemon is available for the search a random gif will appear. </p> 
+    <h1> {{poke_name}}</h1>
+    <h2> {{poke_type}}</h2>
+    <img src="{{src}}"> 
+</div> 
+{% endblock%}

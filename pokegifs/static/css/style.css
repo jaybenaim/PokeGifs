@@ -1,0 +1,14 @@
+body { 
+    display: flex; 
+    flex-direction: column; 
+}
+.form { 
+    display: flex; 
+    justify-content: center; 
+}
+.results { 
+    margin: 0 auto; 
+}
+.results h1, .results h2, .results p { 
+    text-align: center; 
+}

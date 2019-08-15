@@ -12,6 +12,7 @@ import os
 from django.http import JsonResponse 
 import dotenv 
 import socket 
+import random
 
 
 
@@ -21,7 +22,7 @@ def root(request):
 def home(request): 
     return render(request, 'index.html')
     
-def pokemon_show(request, pk): 
+def pokemon_api(request, pk): 
     try: 
 
         api_url = f"http://pokeapi.co/api/v2/pokemon/{pk}/"
@@ -33,7 +34,7 @@ def pokemon_show(request, pk):
 
         giphy_api_key = os.environ.get('GIPHY_API_KEY')
         query = poke_name
-        limit = 1
+        limit = 20
         offset = 0
         rating = 'G'   
         giphy_url = f"https://api.giphy.com/v1/gifs/search?api_key={giphy_api_key}&q={query}&limit={int(limit)}&offset={int(offset)}&rating={rating.upper()}&lang=en"
@@ -50,7 +51,76 @@ def pokemon_show(request, pk):
     except NameError: 
         return HttpResponse("Invalid Key")
 
+    
     return JsonResponse({"name": poke_name, "id": poke_id, "type": poke_type, "gif": gif  })
+
+def pokemon_show(request, pk): 
+    try: 
+        api_url = f"http://pokeapi.co/api/v2/pokemon/{pk}/"
+        res = requests.get(api_url) 
+        body = json.loads(res.content) 
+        poke_name = body['name']
+        poke_id = body['id']
+        poke_type = body['types'][0]['type']['name']
+
+        giphy_api_key = os.environ.get('GIPHY_API_KEY')
+        query = poke_name
+        limit = 20
+        offset = 0
+        rating = 'G'   
+        giphy_url = f"https://api.giphy.com/v1/gifs/search?api_key={giphy_api_key}&q={query}&limit={int(limit)}&offset={int(offset)}&rating={rating.upper()}&lang=en"
+
+        giphy_res = requests.get(giphy_url)
+        giphy_body = json.loads(giphy_res.content) 
+        
+        # data = giphy_res.json() 
+        data = giphy_body['data'][0]
+        gif = data['images']['fixed_height']['url'] 
+    
+    except ValueError: 
+        return HttpResponse('Pokemon not found.')
+    except NameError: 
+        return HttpResponse("Invalid Key")
+
+    return render(request, 'pokemon_show.html', { 
+        'src': gif,
+        'poke_name': poke_name, 
+        'poke_type': poke_type, 
+    })
+
+def pokemon_search(request): 
+    try: 
+        query = request.GET['query']
+        api_url = f"http://pokeapi.co/api/v2/pokemon/{query}/"
+        res = requests.get(api_url) 
+        body = json.loads(res.content) 
+        poke_name = body['name']
+        poke_id = body['id']
+        poke_type = body['types'][0]['type']['name']
+
+        giphy_api_key = os.environ.get('GIPHY_API_KEY')
+        query = poke_name
+        limit = 20
+        offset = 0
+        rating = 'G'   
+        giphy_url = f"https://api.giphy.com/v1/gifs/search?api_key={giphy_api_key}&q={query}&limit={int(limit)}&offset={int(offset)}&rating={rating.upper()}&lang=en"
+
+        giphy_res = requests.get(giphy_url)
+        giphy_body = json.loads(giphy_res.content) 
+        
+        # data = giphy_res.json() 
+        data = giphy_body['data'][0]
+        gif = data['images']['fixed_height']['url'] 
+    
+        
+    except ValueError: 
+        random_error_page = random.randint(1, 100)
+        return redirect(reverse('pokemon_show', args=[random_error_page]))
+    except NameError: 
+        random_error_page = random.randint(1, 100)
+        return redirect(reverse('pokemon_show', args=[random_error_page]))
+    
+    return redirect(reverse('pokemon_show', args=[poke_id]))
 
 def login_view(request):
     if request.user.is_authenticated:
