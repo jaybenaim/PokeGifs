@@ -5,7 +5,7 @@
 <!-- SEaRCH FOR A POKEMON -->
 <form class="form" action="{% url 'pokemon_search' %}" method="get"> 
     <label for="picture-search"> 
-        <span>Search: </span> 
+        <span>Search:&nbsp; </span> 
     </label>
         <input type='search' id="picture-search" name="query" value="{{ query }}" />
     <input type="submit" value="Search" />
@@ -13,8 +13,8 @@
 <div class='results'> 
     <p> Leave me blank for a random pokemon.</p> 
     <p> If no pokemon is available for the search a random gif will appear. </p> 
-    <h1> {{poke_name}}</h1>
-    <h2> {{poke_type}}</h2>
+    <h1> {{poke_name.upper}}</h1>
+    <h2> Type: {{poke_type.capitalize}}</h2>
     <img src="{{src}}"> 
 </div> 
 {% endblock%}
